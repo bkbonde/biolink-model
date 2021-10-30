@@ -3388,9 +3388,6 @@ slots:
     inverse: decreases uptake of
 
   regulates:
-    # direct is_a inheritance from a non-mixin class is not allowed
-    # we defer this inheritance to the classes which this mixin in its mixins
-    # is_a: affects
     comments:
       - This is a grouping for process-process and entity-entity regulation.
     mixin: true
@@ -3407,13 +3404,12 @@ slots:
       # https://www.wikidata.org/wiki/Property:P128 - regulates (molecular biology)
       - WIKIDATA_PROPERTY:P128
       - CHEMBL.MECHANISM:modulator
-      # RTX mapping was 'biolink:related_to' but this term seems a more precise mapping?
       - RO:0002295
       - RO:0002332
       - RO:0002578
-      - RTXKG1:regulates_activity_of
-      - RTXKG1:regulates_expression_of
-  
+
+  # TODO: regulates expression of
+
   regulated by:
     domain: physical essence or occurrent
     range: physical essence or occurrent
@@ -3455,7 +3451,6 @@ slots:
       tag: biolink:canonical_predicate
       value: true
     close_mappings:
-      # This RTX contributed term is tagged as a inverse of this Biolink predicate
       - RO:0002335
     exact_mappings:
       # Strict interpretation here is that entity A causally affects levels of B
@@ -3630,7 +3625,6 @@ slots:
     narrow_mappings:
       - RO:0004024
       - RO:0004025
-      - RTXKG1:disease_causes_disruption_of
 
   disrupted by:
     is_a: affected by
@@ -3667,7 +3661,6 @@ slots:
     in_subset:
       - translator_minimal
     close_mappings:
-      # RTX term tagged as inverse mapping
       - PR:has_gene_template
     exact_mappings:
       - RO:0002205
@@ -3837,7 +3830,6 @@ slots:
       - UBERON_CORE:transitively_connected_to
       - UBERON_CORE:transitively_distally_connected_to
       - UBERON_CORE:transitively_proximally_connected_to
-      # RTX contributed Environmental Ontology term meaning "partially surrounded by"
       - ENVO:01001307
       - FMA:adjacent_to
       - FMA:afferent_to
@@ -3846,8 +3838,6 @@ slots:
       - FMA:anterolateral_to
       - FMA:anteromedial_to
       - FMA:anterosuperior_to
-      # RTX contributed terms (also inverses to one another?) might better be mapped to another term with more precise functional semantics?
-      # Some of these terms also seem to be semantic inverses of one another, thus, perhaps not simple narrow_mappings to Biolink
       - FMA:arterial_supply_of
       - FMA:has_arterial_supply
       - FMA:articulates_with
@@ -3871,10 +3861,8 @@ slots:
       - FMA:external_to
       - FMA:formed_by
       - FMA:forms
-      # these next two RTX mapped terms also seem to be inverses of one another
       - FMA:full_grown_phenotype_of
       - FMA:has_full_grown_phenotype
-      # these next two RTX mapped terms also seem to be inverses of one another
       - FMA:fuses_with
       - FMA:fusion_of
       - FMA:has_fusion
@@ -3945,18 +3933,14 @@ slots:
       - FMA:surrounds
       - FMA:tributary_of
       - FMA:venous_drainage_of
-      # These LOINC: terms contributed by RTX were only tagged as 'biolink:has_attribute'
-      # but seem more aligned to the FMA entries in this biolink term, so I leave them here for now
       - LOINC:has_lateral_anatomic_location
       - LOINC:has_lateral_location_presence
       - OBO:core#distally_connected_to
       - OBO:core#subdivision_of
-      # These RO terms seem similar to the FMA terms above, so I place them here rather than under 'biolink:related_to'
       - RO:0002219
       - RO:0002220
       - RO:0002221
       - SO:has_origin
-      # RTX mapped these UBERON terms all here
       - UBERON:anastomoses_with
       - UBERON:anteriorly_connected_to
       - UBERON:channel_for
@@ -4065,8 +4049,6 @@ slots:
       value: true
     in_subset:
       - translator_minimal
-    exact_mappings:
-      - RTXKG1:gene_associated_with_condition
     broad_mappings:
       # broader than a single gene: 'genotype' pathogenic for condition?
       - GENO:0000840
@@ -4131,16 +4113,13 @@ slots:
       tag: biolink:canonical_predicate
       value: true
     close_mappings:
-      # RTX contributed mapping tagged as 'inverse' of this Biolink predicate
       - IDO:0000664
     exact_mappings:
       - RO:0002326
     narrow_mappings:
       - CTD:marker_mechanism
       - MONDO:predisposes_towards
-      # RTX mapped this to 'biolink:related_to' but this term seems a more precise mapping
       - RO:0002255
-      # RTX term 'contributes to condition' mapped to 'biolink:causes' seems more suitable here
       - RO:0003304
 
   contribution from:
@@ -4176,7 +4155,6 @@ slots:
       - NCIT:allele_has_abnormality
       - NCIT:biological_process_has_result_biological_process
       - NCIT:chemical_or_drug_has_physiologic_effect
-      # RTX mapped terms as 'biolink:part_of' but implied sequence of causality suggests 'biolink:causes'?
       - NCIT:chemical_or_drug_initiates_biological_process
       - NCIT:process_initiates_biological_process
       - NCIT:chromosome_mapped_to_disease
@@ -4187,14 +4165,11 @@ slots:
       - ORPHA:317346
       - ORPHA:410295
       - ORPHA:410296
-      # RTX mapped this term to 'biolink:related_to' but this term seems a more precise mapping
       - RO:0002256
       - RO:0002315
       - RO:0002507
       - RO:0002509
       - RO:0004001
-      # RTX mapping
-      - RTXKG1:capable_of_part_of
       - SNOMED:causative_agent_of
       - SNOMED:has_realization
       - UMLS:has_physiologic_effect
@@ -4216,10 +4191,27 @@ slots:
       - RO:0004020
       - RO:0004028
       - RO:0009501
-      - RTXKG1:disease_caused_by_disruption_of
       - RTXKG1:disease_has_basis_in_dysfunction_of
       - RTXKG1:realized_in_response_to
       - RTXKG1:realized_in_response_to_stimulus
+
+  disease caused by disruption of:
+    description: >-
+      A relation that holds between the disease and a process where the
+      disruption of the process causes a disease.
+    is_a: caused by
+    in_subset:
+      - translator_minimal
+    annotations:
+      tag: biolink:canonical_predicate
+      value: true
+
+  disruption causes disease:
+    is_a: causes
+    inverse: disease caused by disruption of
+    in_subset:
+      - translator_minimal
+
 
   # TODO: ameliorates and exacerbates inverses.
   ameliorates:
